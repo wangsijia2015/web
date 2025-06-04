@@ -1,61 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>支付入口</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: "Helvetica Neue", sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1rem;
-      margin-bottom: 30px;
-    }
-    .button {
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      background-color: #00c9a7;
-      border: none;
-      border-radius: 30px;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
-    }
-    .button:hover {
-      background-color: #00b295;
-    }
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-      .button {
-        padding: 12px 24px;
-        font-size: 1rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <title>正在跳转...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f0f2f5;
+        }
+        .msg {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-  <h1>欢迎来到支付页面</h1>
-  <p>请点击下方按钮进入支付入口</p>
-  <a class="button" href="http://www.vnlina73.club/wsj_pay_entry.php">进入支付</a>
+<div class="msg" id="message">正在识别环境并跳转，请稍候...</div>
+
+<script>
+    $(document).ready(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        var type = '';
+
+        if (ua.indexOf('micromessenger') !== -1) {
+            type = 'wechat';
+        } else if (ua.indexOf('alipayclient') !== -1) {
+            type = 'alipay';
+        } else {
+            $('#message').text('请使用微信或支付宝打开此页面');
+            return;
+        }
+
+        // 异步请求支付链接
+        $.ajax({
+            url: 'https://www.officem.work/wsj_pay_entry1.php',  // 你的后端接口
+            method: 'GET',
+            data: { type: type },
+            dataType: 'json',
+            success: function (res) {
+                if (res.url) {
+                    window.location.href = res.url;
+                } else {
+                    $('#message').text('未能获取跳转地址，请稍后重试');
+                }
+            },
+            error: function () {
+                $('#message').text('请求失败，请检查网络或稍后重试');
+            }
+        });
+    });
+</script>
 </body>
 </html>
