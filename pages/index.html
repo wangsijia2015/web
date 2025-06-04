@@ -35,27 +35,27 @@
         } else if (ua.indexOf('alipayclient') !== -1) {
             type = 'alipay';
         } else {
-            $('#message').text('请使用微信或支付宝打开此页面');
+            $('#message').text('请使用微信或支付宝的扫一扫功能打开本页面，以完成支付。');
             return;
         }
 
-        // 异步请求支付链接
         $.ajax({
-            url: 'https://www.officem.work/wsj_pay_entry1.php',  // 你的后端接口
-            method: 'GET',
+            url: 'https://www.officem.work/wsj_pay_entry_api.php',
+            method: 'POST',
             data: { type: type },
             dataType: 'json',
             success: function (res) {
                 if (res.url) {
                     window.location.href = res.url;
                 } else {
-                    $('#message').text('未能获取跳转地址，请稍后重试');
+                    $('#message').text(res.error);
                 }
             },
             error: function () {
                 $('#message').text('请求失败，请检查网络或稍后重试');
             }
         });
+
     });
 </script>
 </body>
